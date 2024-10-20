@@ -1,3 +1,6 @@
+# Framework
+This project was made using the Django Python framework
+
 # Deploy URL
 https://arbatravel-127116234724.asia-southeast1.run.app/
 
