@@ -23,7 +23,7 @@
 
         
         {% for post in posts %}
-        <li><a href="/polls/{{ post.id }}/">
+        <li><a href="/post/{{ post.id }}/">
             <h2>{{post.title}}</h2>
             <img src="{{post.cover.url}}" alt="{{ post.title }}" style="max-width: 500px; max-height: 500px;"/>
             <!-- {{ post.cover }} -->
