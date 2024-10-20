@@ -7,12 +7,14 @@
     <body>
         posts should be here 
         {% if user.is_authenticated %} 
-        Hi {{user.username}}!
+        Hi {{user.username}}! - {{ user.id }}
         <form action="{% url 'logout' %}" method="post">
             {% csrf_token %}
             <button type="submit">Log Out</button>
         </form>
 
+        <a href="{% url 'create_post' %}">New Post</a>
+        
         {% else %}
         You are not logged in
         <a href="{% url 'login' %}">Log In</a>
