@@ -25,15 +25,17 @@
         <a href="{% url 'login' %}">Log In</a>
         {% endif %}
 
-        
-        <div style="display: flex; width: 100%; justify-content: center; ">
-        {% for post in posts %}
-        <a href="/post/{{ post.id }}/">
-                <img src="{{post.cover.url}}" alt="{{ post.title }}" style="max-height: 200px;"/>
-                <h2 style="text-align: center;">{{post.title}}</h2>
-                <!-- {{ post.cover }} -->
-            </a>
-            {% endfor %}
+        <div style="display: flex; justify-content: center;">
+
+            <div style="display: flex; width: 95vw; justify-content: center; flex-wrap: wrap;">
+            {% for post in posts %}
+            <a href="/post/{{ post.id }}/">
+                    <img src="{{post.cover.url}}" alt="{{ post.title }}" style="max-height: 200px;"/>
+                    <h2 style="text-align: center;">{{post.title}}</h2>
+                    <!-- {{ post.cover }} -->
+                </a>
+                {% endfor %}
+            </div>
         </div>
 
     </body>
