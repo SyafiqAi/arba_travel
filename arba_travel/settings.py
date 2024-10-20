@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*', 'd-127116234724.asia-southeast1.run.app']
 
+CSRF_TRUSTED_ORIGINS = ['https://arbatravel-127116234724.asia-southeast1.run.app']
 
 # Application definition
 
