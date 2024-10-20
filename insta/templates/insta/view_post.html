@@ -1,12 +1,24 @@
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>{{post.title}}</h1>
-    <img src="{{ post.cover.url}}" alt="" style="max-width: 600px; max-height: 600px;">
-    <p>Posted by: {{ poster.username }}</p>
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <h1>{{post.title}}</h1>
+        <img
+            src="{{ post.cover.url}}"
+            alt=""
+            style="max-width: 600px; max-height: 600px"
+        />
+        <p>Posted by: {{ poster.username }}</p>
+        <form method="post" action="{% url 'view' post.id %}">
+            {% csrf_token %} Comment {{ comment_form }}
+            <button name="comment">Comment</button>
+        </form>
+
+        <ul>
+            {% for comment in comment_list %}<li> {{comment.text}} </li>{% endfor %}
+        </ul>
+    </body>
 </html>
