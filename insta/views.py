@@ -10,6 +10,11 @@ def index(request):
     context = {"posts": Post.objects.all()}
     return render(request, "insta/index.html", context)
 
+def view(request, post_id):
+    post = Post.objects.get(id=post_id)
+    context = {"request": request, "post": post, "poster": post.user}
+    return render(request, "insta/view_post.html", context)
+
 def create_post(request):
     return render(request, "insta/create_post.html")
 
