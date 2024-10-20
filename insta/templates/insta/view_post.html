@@ -1,0 +1,71 @@
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <h1>{{post.title}}</h1>
+        <img
+            src="{{ post.cover.url}}"
+            alt=""
+            style="max-width: 600px; max-height: 600px"
+        />
+        <div>Posted by: {{ poster.username }}
+            {% if user.id == poster.id %}
+            <form method="post">
+                {% csrf_token %} 
+                <button name="delete_post" value="{{ post.id }}">Delete post</button>
+            </form>
+            <a href="/update_post/{{post.id}}">edit</a>
+            <form method="post" action="{% url 'update_post' post.id %}">
+                {% csrf_token %} 
+                <button name="update_post" value="{{ post.id }}">Edit post</button>
+            </form>
+            {% endif %}
+        </div>
+
+        <form method="post" action="{% url 'view' post.id %}">
+            {% csrf_token %} 
+            {% if not comment_form.instance.id %}
+            {% if user.is_authenticated %} 
+            {{ comment_form.text }}
+            <button name="comment">Comment</button>
+            {% endif %}
+            {% endif %}
+            <ul>
+                {% for comment in comment_list %}
+                <li>
+                    {{comment.user.username}}: 
+                    
+                    {% if comment_form.instance.id == comment.comment.id %}
+                    
+                        {{ comment_form.text }}
+                        <button name="comment" value="{{ comment.comment.id }}">Save</button>
+                    {% else %}
+                    
+                        {{comment.comment.text}} 
+                        {% if user.id == comment.user.id %}
+                            <button
+                                formnovalidate
+                                name="edit_comment"
+                                value="{{comment.comment.id}}"
+                            >
+                                Edit
+                            </button>
+                            <button
+                                formnovalidate
+                                name="delete_comment"
+                                value="{{comment.comment.id}}"
+                            >
+                                Delete
+                            </button>
+                        {% endif %}
+
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </form>
+    </body>
+</html>
