@@ -1,6 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
-from django.views.generic import CreateView
+from django.views.generic import CreateView, UpdateView
 from insta.models import Post, Comment
 from django.urls import reverse, reverse_lazy
 from .forms import PostForm, CommentForm
@@ -75,3 +75,23 @@ class CreatePostView(CreateView):
         post.user_id = self.request.user.id
         post.save()
         return HttpResponseRedirect("/")
+
+def update_post(request, post_id):
+    post = Post.objects.get(id = post_id)
+    form = PostForm(instance=post)
+    context = {
+        "form": form,
+        "post": post
+    }
+
+    if request.method == 'POST':
+        form = PostForm(request.POST, instance=post)
+        if form.is_valid():
+            post = form.save()
+            post.save()
+            return redirect('/')
+        else:
+            return HttpResponse('fuck you')
+        
+    
+    return render(request, "insta/update_post.html", context)

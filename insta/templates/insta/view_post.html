@@ -17,9 +17,10 @@
                 {% csrf_token %} 
                 <button name="delete_post" value="{{ post.id }}">Delete post</button>
             </form>
-            <form method="post" action="{% url 'create_post' %}">
+            <a href="/update_post/{{post.id}}">edit</a>
+            <form method="post" action="{% url 'update_post' post.id %}">
                 {% csrf_token %} 
-                <button name="edit_post" value="{{ post.id }}">Edit post</button>
+                <button name="update_post" value="{{ post.id }}">Edit post</button>
             </form>
             {% endif %}
         </div>
