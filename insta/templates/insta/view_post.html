@@ -13,20 +13,29 @@
         />
         <p>Posted by: {{ poster.username }}</p>
 
-        {% if user.is_authenticated%}
         <form method="post" action="{% url 'view' post.id %}">
-            {% csrf_token %} Comment {{ comment_form }}
+            {% csrf_token %} 
+            {% if user.is_authenticated %} 
+            Comment 
+            {{ comment_form }}
             <button name="comment">Comment</button>
+            {% endif %}
+            <ul>
+                {% for comment in comment_list %}
+                <li>
+                    {{comment.user.username}}: {{comment.comment.text}} 
+                    {% if user.id == comment.user.id %}
+                    <button
+                        formnovalidate
+                        name="delete_comment"
+                        value="{{comment.comment.id}}"
+                    >
+                        Delete
+                    </button>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
         </form>
-        {% endif %}
-        <ul>
-            {% for comment in comment_list %}
-            <li>{{comment.user.username}}: {{comment.text}} 
-                {% if user.id == comment.user.id %}
-                (you)
-                {% endif %}
-            </li>
-            {% endfor %}
-        </ul>
     </body>
 </html>

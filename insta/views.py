@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views.generic import CreateView
-from insta.models import Post
+from insta.models import Post, Comment
 from django.urls import reverse, reverse_lazy
 from .forms import PostForm, CommentForm
 from django.contrib.auth.models import User
@@ -15,7 +15,7 @@ def view(request, post_id):
     post = Post.objects.get(id=post_id)
     comment_list = post.comment_set.order_by('-created_at')
     comment_list = list(map(lambda comment: {
-        "text": comment.text,
+        "comment": comment,
         "user": User.objects.get(id=comment.user_id)
     }, comment_list))
     comment_form = CommentForm()
@@ -28,13 +28,18 @@ def view(request, post_id):
     }
 
     if request.method == 'POST':
-        form = CommentForm(request.POST)
-        comment = form.save(commit=False)
-        comment.created_at = datetime.datetime.now()
-        comment.user_id = request.user.id
-        comment.post_id = post_id
-        comment.save()
-        return HttpResponseRedirect(reverse('view', kwargs={'post_id': post_id}))
+        if 'comment' in request.POST:
+            form = CommentForm(request.POST)
+            comment = form.save(commit=False)
+            comment.created_at = datetime.datetime.now()
+            comment.user_id = request.user.id
+            comment.post_id = post_id
+            comment.save()
+        elif 'delete_comment' in request.POST:
+            comment_id = request.POST.get('delete_comment')
+            comment = Comment.objects.get(id = comment_id)
+            comment.delete()
+        return redirect(request.META['HTTP_REFERER'])
     
     return render(request, "insta/view_post.html", context)
 
