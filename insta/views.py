@@ -29,16 +29,29 @@ def view(request, post_id):
 
     if request.method == 'POST':
         if 'comment' in request.POST:
-            form = CommentForm(request.POST)
-            comment = form.save(commit=False)
-            comment.created_at = datetime.datetime.now()
-            comment.user_id = request.user.id
-            comment.post_id = post_id
-            comment.save()
+            comment_id = request.POST.get('comment')
+            if not comment_id:
+                form = CommentForm(request.POST)
+                comment = form.save(commit=False)
+                comment.created_at = datetime.datetime.now()
+                comment.user_id = request.user.id
+                comment.post_id = post_id
+                comment.save()
+            else:
+                comment = Comment.objects.get(id = comment_id)
+                form = CommentForm(request.POST, instance=comment)
+                form.save()
+            context["comment_form"] = CommentForm()
         elif 'delete_comment' in request.POST:
             comment_id = request.POST.get('delete_comment')
             comment = Comment.objects.get(id = comment_id)
             comment.delete()
+        elif 'edit_comment' in request.POST:
+            comment_id = request.POST.get('edit_comment')
+            comment = Comment.objects.get(id = comment_id)
+            form = CommentForm(instance=comment)
+            context['comment_form'] = form
+            return render(request, "insta/view_post.html", context)
         return redirect(request.META['HTTP_REFERER'])
     
     return render(request, "insta/view_post.html", context)

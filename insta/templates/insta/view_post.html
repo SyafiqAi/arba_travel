@@ -15,23 +15,41 @@
 
         <form method="post" action="{% url 'view' post.id %}">
             {% csrf_token %} 
+            {% if not comment_form.instance.id %}
             {% if user.is_authenticated %} 
-            Comment 
-            {{ comment_form }}
+            {{ comment_form.text }}
             <button name="comment">Comment</button>
+            {% endif %}
             {% endif %}
             <ul>
                 {% for comment in comment_list %}
                 <li>
-                    {{comment.user.username}}: {{comment.comment.text}} 
-                    {% if user.id == comment.user.id %}
-                    <button
-                        formnovalidate
-                        name="delete_comment"
-                        value="{{comment.comment.id}}"
-                    >
-                        Delete
-                    </button>
+                    {{comment.user.username}}: 
+                    
+                    {% if comment_form.instance.id == comment.comment.id %}
+                    
+                        {{ comment_form.text }}
+                        <button name="comment" value="{{ comment.comment.id }}">Save</button>
+                    {% else %}
+                    
+                        {{comment.comment.text}} 
+                        {% if user.id == comment.user.id %}
+                            <button
+                                formnovalidate
+                                name="edit_comment"
+                                value="{{comment.comment.id}}"
+                            >
+                                Edit
+                            </button>
+                            <button
+                                formnovalidate
+                                name="delete_comment"
+                                value="{{comment.comment.id}}"
+                            >
+                                Delete
+                            </button>
+                        {% endif %}
+
                     {% endif %}
                 </li>
                 {% endfor %}
