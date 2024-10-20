@@ -6,6 +6,7 @@ from django.urls import reverse, reverse_lazy
 from .forms import PostForm, CommentForm
 from django.contrib.auth.models import User
 import datetime
+import os
 
 def index(request):
     context = {"posts": Post.objects.all()}
@@ -56,6 +57,12 @@ def view(request, post_id):
             post_id = request.POST.get('delete_post')
             post = Post.objects.get(id = post_id)
             post.delete()
+
+            # delete image from directory
+            image = post.cover
+            image_path = image.path
+            if os.path.exists(image_path):
+                os.remove(image_path)
             return redirect('/')
 
         return redirect(request.META['HTTP_REFERER'])
