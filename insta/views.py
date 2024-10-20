@@ -52,6 +52,12 @@ def view(request, post_id):
             form = CommentForm(instance=comment)
             context['comment_form'] = form
             return render(request, "insta/view_post.html", context)
+        elif 'delete_post' in request.POST:
+            post_id = request.POST.get('delete_post')
+            post = Post.objects.get(id = post_id)
+            post.delete()
+            return redirect('/')
+
         return redirect(request.META['HTTP_REFERER'])
     
     return render(request, "insta/view_post.html", context)
